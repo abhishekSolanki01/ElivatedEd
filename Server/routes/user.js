@@ -12,13 +12,25 @@ const User = require('../db/user')
 //middleware
 const { userAuth, courseValidation, SECRET } = require('../middleware');
 
+router.get('/me', userAuth, async (req, res) => {
+  const isUserExist = await User.exists({ username: req.user.username })
+  if(!isUserExist){
+    res.status(403).send({ message: 'Admin not found' })
+  }else{
+    res.status(200).send({message: 'userExist', email : req.user.username})
+  }
+})
+
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
+    if(!username || !password ){
+      res.status(403).json({ message: 'enter correct email and password' });
+    }
     const addUser = await User.exists({username})
     if(addUser){
       res.status(403).json({ message: 'User already exists' });
     }else{
-      const addNewUser = new User({username, password})
+      const addNewUser = new User({username, password, purchasedCourses: []})
       await addNewUser.save(); 
       const token = await jwt.sign({username, password}, SECRET, {expiresIn: "1h"});
       res.json({ message: 'User created successfully', token });
@@ -35,6 +47,17 @@ router.post('/signup', async (req, res) => {
       res.status(403).json({ message: 'Invalid username or password' });
     }
   });
+
+  // router.post('/logout', async (req, res) => {
+  //   const { username, password } = req.headers;
+  //   const user = await User.exists({ username, password });
+  //   if(user){
+  //     const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '100h' });
+  //     res.json({ message: 'Logged in successfully', token });
+  //   }else{
+  //     res.status(403).json({ message: 'Invalid username or password' });
+  //   }
+  // });
   
   router.get('/courses', userAuth, async (req, res) => {
     const courses = await Course.find({published: true});
