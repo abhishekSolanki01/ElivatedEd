@@ -2,6 +2,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router()
+const mongoose = require('mongoose')
 
 //db
 const Admin = require('../db/admin');
@@ -15,7 +16,7 @@ const { userAuth, courseValidation, SECRET } = require('../middleware');
 router.get('/me', userAuth, async (req, res) => {
   const isUserExist = await User.exists({ username: req.user.username })
   if(!isUserExist){
-    res.status(403).send({ message: 'Admin not found' })
+    res.status(403).send({ message: 'User not found' })
   }else{
     res.status(200).send({message: 'userExist', email : req.user.username})
   }
@@ -33,7 +34,7 @@ router.post('/signup', async (req, res) => {
       const addNewUser = new User({username, password, purchasedCourses: []})
       await addNewUser.save(); 
       const token = await jwt.sign({username, password}, SECRET, {expiresIn: "1h"});
-      res.json({ message: 'User created successfully', token });
+      res.json({ message: 'User created successfully', token, email: username  });
     }
   });
   
@@ -42,7 +43,7 @@ router.post('/signup', async (req, res) => {
     const user = await User.exists({ username, password });
     if(user){
       const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '100h' });
-      res.json({ message: 'Logged in successfully', token });
+      res.json({ message: 'Logged in successfully', token, email: username });
     }else{
       res.status(403).json({ message: 'Invalid username or password' });
     }
@@ -60,8 +61,19 @@ router.post('/signup', async (req, res) => {
   // });
   
   router.get('/courses', userAuth, async (req, res) => {
-    const courses = await Course.find({published: true});
-    res.json({ courses });
+    const courses = await Course.find({published: true}).lean();
+    const userData = await User.findOne({ username: req.user.username }).lean()
+    const purchasesCourses = userData.purchasedCourses.map(el=>el.toString());
+    console.log(purchasesCourses);
+    let modifiedCourses = courses.map(el => {
+      let id = el._id.toString();
+      let purchased = purchasesCourses.includes(id)
+      return {
+        ...el,
+        purchased
+      }
+    })
+    res.json({ courses : modifiedCourses });
   });
   
   router.get('/courses/:courseId', userAuth, async (req, res) => {

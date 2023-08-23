@@ -19,9 +19,16 @@ import { useEffect } from 'react';
 
 import {
   useSetRecoilState,
-  useRecoilState
+  useRecoilState,
+  useRecoilValue
 } from 'recoil';
-import { userState } from '../../recoil';
+import { userState } from '../../store/atoms/user';
+
+import {isUserLoading} from '../../store/selectors/isUserLoading.js'
+import {userEmailStatus} from '../../store/selectors/userEmail'
+
+import avatar from '../../assets/avatar.jpg'
+
 
 
 const pages = [{name:'courses', route: '/courses'}, {name:'purchased', route: '/courses/purchased'}, {name: 'ContactUs', route: "/"}];
@@ -29,8 +36,13 @@ const pages = [{name:'courses', route: '/courses'}, {name:'purchased', route: '/
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function AppBarCustom() {
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
   const navigate = useNavigate()
+  const userLoading = useRecoilValue(isUserLoading)
+  const userEmail = useRecoilValue(userEmailStatus);
+
+
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -52,150 +64,158 @@ function AppBarCustom() {
   };
 
   const handleClickUserMenu = async(e) => {
+    const target = e.currentTarget.getAttribute("name")
     handleCloseUserMenu()
-    const logoutRes = await logout()
-    if(logoutRes.status){
-      setUser(null)
+    // console.log(target.toLowerCase());
+    if(target.toLowerCase() === 'logout'){
+      const logoutRes = await logout()
+      if(logoutRes.status){
+        setUser({
+          loading: false,
+          userEmail: null
+        })
+      }
     }
   }
 
-  const init = async() => {
-    const isUseLoggedIn = await loginStatus();
-    if(isUseLoggedIn){
-      setUser({loggedIn: true})
-    }
-  }
-
-  useEffect(() => {
-    init()
-  }, [])
-
-  return (
-    <AppBar position="sticky" sx={{background: "#121212"}}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LEARNit 
-          </Typography>
-
-          {user && <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={(event) => { navigate(event.currentTarget.value) }}
+  if(userLoading){
+    return <>Loading...</>
+  }else{
+    return (
+      <AppBar position="sticky" sx={{background: "#121212"}}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
+            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
               sx={{
-                display: { xs: 'block', md: 'none' },
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page.name} onClick={(event) => { navigate(event.currentTarget.value) }}>
-                  <Typography textAlign="center" value={page.route}>{page.name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>}
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            LOGO
-          </Typography>
-          {user && <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page.name}
-                onClick={(event) => { navigate(event.currentTarget.value) }}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-                value={page.route}
+              LEARNit 
+            </Typography>
+  
+            {userEmail && <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
               >
-                {page.name}
-              </Button>
-            ))}
-          </Box>}
-          {
-            user && 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
+                <MenuIcon />
+              </IconButton>
               <Menu
-                sx={{ mt: '45px' }}
                 id="menu-appbar"
-                anchorEl={anchorElUser}
+                anchorEl={anchorElNav}
                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: 'bottom',
+                  horizontal: 'left',
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'left',
                 }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+                open={Boolean(anchorElNav)}
+                onClose={(event) => { navigate(event.currentTarget.value) }}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleClickUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                {pages.map((page) => (
+                  <MenuItem key={page.name} onClick={(event) => { navigate(event.currentTarget.value) }}>
+                    <Typography textAlign="center" value={page.route}>{page.name}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
-            </Box>
-          }
+            </Box>}
+            <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: 'flex', md: 'none' },
+                flexGrow: 1,
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
+              Learnit
+            </Typography>
+            {userEmail && <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page.name}
+                  onClick={(event) => { navigate(event.currentTarget.value) }}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  value={page.route}
+                >
+                  {page.name}
+                </Button>
+              ))}
+            </Box>}
+            {userEmail && <Typography sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                color: 'inherit',
+                textDecoration: 'none',
+              }}>{userEmail}</Typography>}
+            {
+              userEmail && 
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="Remy Sharp" src={avatar} />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} name={setting} onClick={handleClickUserMenu}>
+                      <Typography name={setting} textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            }
+  
+          </Toolbar>
+        </Container>
+      </AppBar>
+    );
+  }
 
-        </Toolbar>
-      </Container>
-    </AppBar>
-  );
 }
 export default AppBarCustom;

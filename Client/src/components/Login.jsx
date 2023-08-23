@@ -1,4 +1,5 @@
 import React from "react";
+import {useNavigate} from 'react-router-dom'
 import { login as loginUser } from "../axios";
 
 import Paper from '@mui/material/Paper';
@@ -8,21 +9,23 @@ import { AccountCircle, VpnKey } from '@mui/icons-material';
 import { Box, Button, Typography, Grid } from "@mui/material";
 
 import { useSetRecoilState, useRecoilState } from 'recoil'
-import { userState } from "../recoil";
+import { userState } from "../store/atoms/user";
 
 import img from "../assets/Computer-login-rafiki.svg"
 
 
 /// File is incomplete. You need to add input boxes to take input for users to login.
 function Login() {
+    const navigate = useNavigate()
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [user,setUser] = useRecoilState(userState)
+    const setUser = useSetRecoilState(userState)
 
     const login = async () => {
         const loginRes = await loginUser({ username: email, password })
         if (loginRes.message = "Logged in successfully") {
-            setUser({ loggedIn: true })
+            setUser({ loading: false, userEmail: loginRes.email})
+            navigate('/')
         }
     }
 

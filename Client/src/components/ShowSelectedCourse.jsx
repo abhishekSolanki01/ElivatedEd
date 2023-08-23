@@ -2,10 +2,12 @@ import { Grid, Typography } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { purchaseCourse, viewCourse } from "../axios";
+import EditCourse from "./editCourse";
 import CourseCard from "./helperComponents/CourseCard";
 
 
 function ShowSelectedCourses() {
+    const adminUser = true
     const { id: courseId } = useParams()
     console.log(courseId);
     const [courses, setCourses] = React.useState([]);
@@ -30,7 +32,7 @@ function ShowSelectedCourses() {
             <Grid item xs={12}>
                 <Typography variant='h4'>Selected Course Page</Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={4}>
                 <Grid container justifyContent="center" spacing={3}>
                     {courses.map((c, index) =>
                         <CourseCard
@@ -45,6 +47,9 @@ function ShowSelectedCourses() {
                             }]}
                         />)}
                 </Grid>
+            </Grid>
+            <Grid item xs={12} md={8}>
+                <EditCourse/>
             </Grid>
         </Grid>
     )

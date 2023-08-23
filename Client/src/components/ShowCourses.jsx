@@ -36,7 +36,8 @@ function ShowCourses() {
                         let actions = [{
                             title: "Buy",
                             onClick: () => {onPurchaseCourseClick(c._id)},
-                            variant: "contained"
+                            variant: "contained",
+                            disabled: c.purchased
                         }] 
                         return (
                             <CourseCard 

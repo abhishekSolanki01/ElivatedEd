@@ -12,7 +12,7 @@ import { AccountCircle, VpnKey } from '@mui/icons-material';
 import { Box, Button, Typography, Grid } from "@mui/material";
 
 import { useSetRecoilState } from 'recoil'
-import { userState } from "../recoil";
+import { userState } from "../store/atoms/user";
 
 import img from "../assets/Mobile-login-rafiki.svg"
 
@@ -27,7 +27,8 @@ function Register() {
     const register = async () => {
         const registerRes = await registerUser({ username: email, password });
         if (registerRes.message = "User created successfully") {
-            setUser({ loggedIn: true })
+            setUser({ loading: false, userEmail: registerRes.email})
+            navigate('/')
         }
     }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { fetchPurchasedCourse } from "../axios";
+import { fetchPurchasedCourse, purchaseCourse } from "../axios";
 import CourseCard from "./helperComponents/CourseCard";
 
 import { Grid, Typography } from "@mui/material";
@@ -20,15 +20,24 @@ function ShowPurchasedCourses() {
         fetchAllCourses()
     }, [])
 
+    const onPurchaseCourseClick = async (id) => {
+        const purchaseCourseRes = await purchaseCourse(id)
+    }
+
     return (
         <Grid sx={{ flexGrow: 1 }} container spacing={2} mb={2}>
             <Grid item xs={12}>
                 <Typography variant='h4'>Purchased Courses</Typography>
             </Grid>
             <Grid item xs={12}>
-                <Grid container justifyContent="center" spacing={3}>
-                    {courses.map((c, index) => <CourseCard title={c.title} description={c.description} index={index} imageLink={c.imageLink} />)}
-                </Grid>
+                {courses && <Grid container justifyContent="center" spacing={3}>
+                    {courses.map((c, index) => <CourseCard title={c.title} description={c.description} index={index} imageLink={c.imageLink} 
+                    actions={[{
+                        title: "Buy",
+                        onClick: () => { onPurchaseCourseClick(c._id) },
+                        variant: "contained"
+                    }]}/>)}
+                </Grid>}
             </Grid>
         </Grid>
     )

@@ -24,7 +24,7 @@ router.post('/signup', async (req, res) => {
       const adminToBeAdd = new Admin(obj)
       const saveAdmin = await adminToBeAdd.save();
       const token = jwt.sign({username, role: 'admin'}, SECRET, { expiresIn: '100h' })
-      res.json({ message: 'Admin created successfully', token });
+      res.json({ message: 'Admin created successfully', token , email: username });
     }
   });
   
@@ -33,7 +33,7 @@ router.post('/signup', async (req, res) => {
     const ifAdminExist = await Admin.exists({ username, password });
     if(ifAdminExist){
       const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '100h' });
-      res.json({ message: 'Logged in successfully', token });
+      res.json({ message: 'Logged in successfully', token, email: user.username  });
     }else{
       res.status(403).json({ message: 'Invalid username or password' });
     }

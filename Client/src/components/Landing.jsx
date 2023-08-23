@@ -3,42 +3,18 @@ import { Box, Container, Grid, Stack, Typography, Button } from "@mui/material";
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil'
-import AppBarCustom from "./helperComponents/AppBarCustom";
-import image from "../assets/black-squares-pattern-background.jpg"
-import gif from "../assets/Thesis.gif"
 import img from "../assets/Thesis-rafiki-detailed.svg"
 
 import { fetchPurchasedCourse, purchaseCourse, viewAllCourses } from "../axios";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import CourseCard from "./helperComponents/CourseCard";
-import { userState } from "../recoil";
+import { userState } from "../store/atoms/user";
+import {userEmailStatus} from '../store/selectors/userEmail'
 
-/// This is the landing page. You need to add a link to the login page here.
-/// Maybe also check from the backend if the user is already logged in and then show them a logout button
-/// Logging a user out is as simple as deleting the token from the local storage.
 function Landing() {
     const navigate = useNavigate()
-    const [courses, setCourses] = React.useState([]);
-    const user = useRecoilValue(userState)
-
-    const checkIfLoggedIn = () => {
-        const token = localStorage.getItem("token")
-    }
-
-    const fetchAllCourses = async () => {
-        const allCourses = await viewAllCourses()
-        setCourses(allCourses.courses)
-    }
-
-    const onPurchaseCourseClick = async (id) => {
-        const purchaseCourseRes = await purchaseCourse(id)
-    }
-
-
-    React.useEffect(() => {
-        fetchAllCourses()
-    }, [])
+    const user = useRecoilValue(userEmailStatus)
 
     return <>
 
@@ -94,54 +70,64 @@ function Landing() {
                         <Typography variant="h5">Learn at Your Own Pace," "Guided by Industry Experts," "Interactive & Rich Content.</Typography>
                         <Stack spacing={2} mt={6} direction="row" alignItems="center" justifyContent="center">
 
-                            <Grid item xs={12}>
-                                <Grid container justifyContent="center" spacing={3}>
-                                    {courses.map((c, index) => {
-                                        let actions = [{
-                                            title: "Buy",
-                                            onClick: () => { onPurchaseCourseClick(c._id) },
-                                            variant: "contained"
-                                        }]
-                                        if(!user){
-                                            actions = []
-                                        }
-                                        return (
-                                            <CourseCard
-                                                title={c.title}
-                                                description={c.description}
-                                                index={index}
-                                                imageLink={c.imageLink}
-                                                actions={actions}
-                                            />
-                                        )
-                                    }
-                                    )}
-                                </Grid>
-                            </Grid>
-
-
-
+                            <Courses/>
 
                         </Stack>
                     </Box>
-
                 </Grid>
             </Grid>
-
         </Container>
-
-
-
-
-
-
-        {/* 
-
-        <h1>Welcome to course selling website!</h1>
-        <a href="/register">Register</a>
-        <br/>
-        <a href="/login">Login</a> */}
     </>
+}
+
+const Courses = () => {
+    const [courses, setCourses] = React.useState([]);
+    const user = useRecoilValue(userEmailStatus)
+    const navigate = useNavigate()
+
+
+    const onPurchaseCourseClick = async (id) => {
+        const purchaseCourseRes = await purchaseCourse(id)
+    }
+
+    const fetchAllCourses = async () => {
+        const allCourses = await viewAllCourses()
+        setCourses(allCourses.courses)
+    }
+
+    React.useEffect(() => {
+        fetchAllCourses()
+    }, [])
+    
+    return (
+        <Grid item xs={12}>
+            <Grid container justifyContent="center" spacing={3}>
+                {courses.map((c, index) => {
+                    let actions = [{
+                        title: "Buy",
+                        onClick: () => { onPurchaseCourseClick(c._id) },
+                        variant: "contained",
+                        disabled: c.purchased
+                    }]
+                    if (!user) {
+                        actions = []
+                    }
+                    return (
+                        <CourseCard
+                            title={c.title}
+                            description={c.description}
+                            index={index}
+                            imageLink={c.imageLink}
+                            actions={actions}
+                            onCardClick={() => {navigate(`/courses/${c._id}`)}}
+                        />
+                    )
+                }
+                )}
+            </Grid>
+        </Grid>
+
+    )
 }
 
 export default Landing;
