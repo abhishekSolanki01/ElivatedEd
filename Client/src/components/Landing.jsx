@@ -109,7 +109,7 @@ const Courses = () => {
                         variant: "contained",
                         disabled: c.purchased
                     }]
-                    if (!user) {
+                    if (!user || JSON.parse(localStorage.getItem('isAdmin'))) {
                         actions = []
                     }
                     return (

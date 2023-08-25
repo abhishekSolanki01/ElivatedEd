@@ -1,13 +1,14 @@
 import React from "react";
 import { fetchPurchasedCourse, purchaseCourse } from "../axios";
 import CourseCard from "./helperComponents/CourseCard";
+import { useNavigate } from 'react-router-dom';
 
 import { Grid, Typography } from "@mui/material";
 
 
 function ShowPurchasedCourses() {
     const [courses, setCourses] = React.useState([]);
-
+    const navigate = useNavigate()
     // Add code to fetch courses from the server
     // and set it in the courses state variable.
 
@@ -31,12 +32,19 @@ function ShowPurchasedCourses() {
             </Grid>
             <Grid item xs={12}>
                 {courses && <Grid container justifyContent="center" spacing={3}>
-                    {courses.map((c, index) => <CourseCard title={c.title} description={c.description} index={index} imageLink={c.imageLink} 
-                    actions={[{
-                        title: "Buy",
-                        onClick: () => { onPurchaseCourseClick(c._id) },
-                        variant: "contained"
-                    }]}/>)}
+                    {courses.map((c, index) => <CourseCard 
+                        onCardClick={() => {navigate(`/courses/${c._id}/?purchased:${true}`)}}
+                        title={c.title} 
+                        description={c.description} 
+                        index={index} 
+                        imageLink={c.imageLink} 
+                        actions={[]}
+                    // [{
+                    //     title: "Buy",
+                    //     onClick: () => { onPurchaseCourseClick(c._id) },
+                    //     variant: "contained"
+                    // }]}
+                    />)}
                 </Grid>}
             </Grid>
         </Grid>

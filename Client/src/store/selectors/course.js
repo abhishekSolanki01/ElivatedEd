@@ -1,59 +1,68 @@
 import { courseState } from '../atoms/courses'
 import { selector } from 'recoil'
 
-const isCourseLoadingState = selector({
+export const isCourseLoadingState = selector({
     key: 'isCourseLoadingState',
-    set: ({ set }) => {
-        const state = set(courseState);
-        return state.isCourseLoading
+    get: ({ get }) => {
+        const state = get(courseState);
+        return state.isLoading
     }
 })
 
-const courseDetails = selector({
+export const courseDetails = selector({
     key: 'courseDetails',
-    set: ({ set }) => {
-        const state = set(courseState);
+    get: ({ get }) => {
+        const state = get(courseState);
         return state.course
     }
 })
 
-const courseTitle = selector({
+export const courseTitle = selector({
     key: 'courseTitle',
-    set: ({ set }) => {
-        const state = set(courseState);
+    get: ({ get }) => {
+        const state = get(courseState);
         return state?.course?.title || ""
     }
 })
 
-const courseDescription = selector({
+export const courseDescription = selector({
     key: 'courseDescription',
-    set: ({ set }) => {
-        const state = set(courseState);
+    get: ({ get }) => {
+        const state = get(courseState);
         return state?.course?.description || ""
     }
 })
 
-const coursePrice = selector({
+export const coursePrice = selector({
     key: 'coursePrice',
-    set: ({ set }) => {
-        const state = set(courseState);
+    get: ({ get }) => {
+        const state = get(courseState);
         return state?.course?.price || ""
     }
 })
 
-const courseImage = selector({
+export const courseImage = selector({
     key: 'courseImage',
-    set: ({ set }) => {
-        const state = set(courseState);
+    get: ({ get }) => {
+        const state = get(courseState);
         return state?.course?.image || ""
     }
 })
 
-eports = {
-    isCourseLoadingState,
-    courseDetails,
-    courseTitle,
-    courseDescription,
-    coursePrice,
-    courseImage,
-}
+export const publishedSataus = selector({
+    key: 'publishedSataus',
+    get: ({ get }) => {
+        const state = get(courseState);
+        return state?.course?.published || true
+    }
+})
+
+// export = {
+//     isCourseLoadingState,
+//     courseDetails,
+//     courseTitle,
+//     courseDescription,
+//     coursePrice,
+//     courseImage,
+//     publishedSataus
+// }

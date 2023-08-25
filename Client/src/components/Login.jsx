@@ -1,17 +1,20 @@
 import React from "react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { login as loginUser } from "../axios";
 
 import Paper from '@mui/material/Paper';
 
 import TextField from '@mui/material/TextField';
 import { AccountCircle, VpnKey } from '@mui/icons-material';
-import { Box, Button, Typography, Grid } from "@mui/material";
+import { Box, Button, Typography, Grid, Switch, Stack } from "@mui/material";
+import { styled } from '@mui/material/styles';
+
 
 import { useSetRecoilState, useRecoilState } from 'recoil'
 import { userState } from "../store/atoms/user";
 
 import img from "../assets/Computer-login-rafiki.svg"
+import { useState } from "react";
 
 
 /// File is incomplete. You need to add input boxes to take input for users to login.
@@ -20,11 +23,12 @@ function Login() {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const setUser = useSetRecoilState(userState)
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const login = async () => {
-        const loginRes = await loginUser({ username: email, password })
+        const loginRes = await loginUser({ username: email, password }, isAdmin)
         if (loginRes.message = "Logged in successfully") {
-            setUser({ loading: false, userEmail: loginRes.email})
+            setUser({ loading: false, userEmail: loginRes.email })
             navigate('/')
         }
     }
@@ -79,13 +83,21 @@ function Login() {
 
                         <AccountCircle
                             sx={{
-                                mt: 3,
+                                mt: 2,
                                 // position: 'absolute', top: '15%', left: '50%', 
-                                width: 70, height: 70,
+                                width: 50, height: 50,
                                 // transform: "translateX(-50%)",
                                 textAlign: "center",
                             }}
                         />
+
+                        <Box sx={{display: 'flex', alignItem:'center', justifyContent: 'center'}}>
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <Typography>User</Typography>
+                                <Switch inputProps={{ 'aria-label': 'ant design' }} onChange={(e) => { setIsAdmin(true) }} />
+                                <Typography>Admin</Typography>
+                            </Stack>
+                        </Box>
 
                         <Box sx={{ '& > :not(style)': { m: 4, mt: 0 }, m: 0, height: "auto" }}>
                             <Typography variant="h4">Login to the site</Typography>
@@ -103,8 +115,8 @@ function Login() {
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }} mb={0}>
                                 <Typography variant="h9" gutterBottom={3}>New here? <a href="/signup">Register</a> </Typography>
                                 <Button onClick={login} variant="contained" >Login</Button>
-                            </Box>
 
+                            </Box>
                         </Box>
 
                     </Paper>
@@ -119,5 +131,6 @@ function Login() {
 
 
 }
+
 
 export default Login;

@@ -16,6 +16,13 @@ export default function CourseCard({
     onCardClick
 }) {
 
+    console.log(description,
+        title,
+        index,
+        imageLink,
+        actions,
+        onCardClick);
+
     return (
         <Grid key={index} item>
             <Paper

@@ -20,7 +20,7 @@ import { useEffect } from "react";
 import { editCourse } from "../axios";
 
 
-const EditCourse = () => {
+const CourseDetails = () => {
     const { id: courseId } = useParams()
 
     const [courseDetail, setCourse] = useRecoilState(courseState);
@@ -74,19 +74,20 @@ const EditCourse = () => {
                         theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                 }}
             >
-                <Box m={2}>
+                {courseDetail && <Box m={2}>
                     <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField fullWidth label="Title" id="fullWidth" defaultValue={title} value={title} onChange={(e, value) => { setTitle(e.target.value) }} />
+                        <TextField disabled fullWidth  label="Title" id="fullWidth" defaultValue={title|| ""} value={title || ""} onChange={(e, value) => { setTitle(e.target.value) }} />
+                    </Box>
+                    <Box m={1} sx={{ maxWidth: '100%'}}>
+                        <TextField disabled fullWidth label="Description" id="fullWidth" defaultValue={description || ""} value={description || ""} onChange={(e, value) => { setDescription(e.target.value) }} />
                     </Box>
                     <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField fullWidth label="Description" id="fullWidth" defaultValue={description} value={description} onChange={(e, value) => { setDescription(e.target.value) }} />
-                    </Box>
-                    <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField fullWidth label="Image Link" id="fullWidth" defaultValue={imageLink} value={imageLink} onChange={(e, value) => { setImageLink(e.target.value) }} />
+                        <TextField disabled fullWidth label="Image Link" id="fullWidth" defaultValue={imageLink || ""} value={imageLink || ""} onChange={(e, value) => { setImageLink(e.target.value) }} />
                     </Box>
                     <Box m={1} sx={{ display: 'flex', maxWidth: '100%' }}>
-                        <TextField fullWidth type='number' label="Price" id="fullWidth" defaultValue={price} value={price} onChange={(e, value) => { setPrice(e.target.value) }} />
+                        <TextField disabled fullWidth type='number' label="Price" id="fullWidth" defaultValue={price || ""} value={price || ""} onChange={(e, value) => { setPrice(e.target.value) }} />
                         <ToggleButtonGroup
+                        disabled
                             color="primary"
                             defaultValue={published ? "Publish" : "Unpublish"}
                             value={published ? "Publish" : "Unpublish"}
@@ -98,13 +99,13 @@ const EditCourse = () => {
                             <ToggleButton value="Unpublish">Unpublish</ToggleButton>
                         </ToggleButtonGroup>
                     </Box>
-                    <Box m={1} sx={{ height: 'auto' }} >
+                    {/* <Box m={1} sx={{ height: 'auto' }} >
                         <Button size="small" variant="contained" onClick={onSave}>Save</Button>
-                    </Box>
-                </Box>
+                    </Box> */}
+                </Box>}
             </Paper>
         </Grid>
     )
 }
 
-export default EditCourse;
+export default CourseDetails;

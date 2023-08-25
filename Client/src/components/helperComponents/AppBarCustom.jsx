@@ -31,7 +31,9 @@ import avatar from '../../assets/avatar.jpg'
 
 
 
-const pages = [{name:'courses', route: '/courses'}, {name:'purchased', route: '/courses/purchased'}, {name: 'ContactUs', route: "/"}];
+const user_pages = [{name:'courses', route: '/courses'}, {name:'purchased', route: '/courses/purchased'}, {name: 'ContactUs', route: "/"}];
+const admin_pages = [{name:'courses', route: '/courses'}, {name: 'ContactUs', route: "/"}];
+
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -40,6 +42,8 @@ function AppBarCustom() {
   const navigate = useNavigate()
   const userLoading = useRecoilValue(isUserLoading)
   const userEmail = useRecoilValue(userEmailStatus);
+  const isAdmin = JSON.parse(localStorage.getItem('isAdmin'))
+  const pages = isAdmin ? admin_pages : user_pages
 
 
 
@@ -70,6 +74,7 @@ function AppBarCustom() {
     if(target.toLowerCase() === 'logout'){
       const logoutRes = await logout()
       if(logoutRes.status){
+        localStorage.setItem("isAdmin", false)
         setUser({
           loading: false,
           userEmail: null

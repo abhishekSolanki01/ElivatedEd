@@ -10,8 +10,14 @@ const Course = require('../db/course')
 //middleware
 const { auth, courseValidation, SECRET } = require('../middleware');
 
-
-
+router.get('/me', auth, async (req, res) => {
+  const isUserExist = await Admin.exists({ username: req.user.username })
+  if(!isUserExist){
+    res.status(403).send({ message: 'User not found' })
+  }else{
+    res.status(200).send({message: 'userExist', email : req.user.username, isAdmin: true})
+  }
+})
 
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
@@ -33,7 +39,7 @@ router.post('/signup', async (req, res) => {
     const ifAdminExist = await Admin.exists({ username, password });
     if(ifAdminExist){
       const token = jwt.sign({ username, role: 'admin' }, SECRET, { expiresIn: '100h' });
-      res.json({ message: 'Logged in successfully', token, email: user.username  });
+      res.json({ message: 'Logged in successfully', token, email: username  });
     }else{
       res.status(403).json({ message: 'Invalid username or password' });
     }
