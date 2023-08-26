@@ -48,7 +48,6 @@ export const logout = async (data) => {
 }
 
 export const viewAllCourses = async() => {
-    debugger
     let isAdmin = localStorage.getItem('isAdmin');
     let URL = JSON.parse(isAdmin) ? admin_url : url;
     const courses = await axios({
@@ -115,7 +114,7 @@ export const editCourse = async(param, body) =>{
     const editCourseRes = await axios({
         method: 'put',
         url: `${admin_url}/courses/${param}`,
-        body,
+        data : body,
         headers: { 
             "Authorization" : `Bearer ${localStorage.getItem("token")}`
         }

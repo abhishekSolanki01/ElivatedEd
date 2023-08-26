@@ -75,6 +75,7 @@ function AppBarCustom() {
       const logoutRes = await logout()
       if(logoutRes.status){
         localStorage.setItem("isAdmin", false)
+        navigate('/')
         setUser({
           loading: false,
           userEmail: null

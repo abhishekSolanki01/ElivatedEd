@@ -41,6 +41,7 @@ const EditCourse = () => {
 
 
     const onSave = async() => {
+        debugger
         const editCourseRes = await editCourse(courseId, {title,
             description,
             price,
@@ -76,16 +77,16 @@ const EditCourse = () => {
             >
                 <Box m={2}>
                     <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField fullWidth label="Title" id="fullWidth" defaultValue={title} value={title} onChange={(e, value) => { setTitle(e.target.value) }} />
+                        <TextField fullWidth label="Title" id="fullWidth" defaultValue={title} value={title || ""} onChange={(e, value) => { setTitle(e.target.value) }} />
                     </Box>
                     <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField fullWidth label="Description" id="fullWidth" defaultValue={description} value={description} onChange={(e, value) => { setDescription(e.target.value) }} />
+                        <TextField fullWidth label="Description" id="fullWidth" defaultValue={description} value={description || ""} onChange={(e, value) => { setDescription(e.target.value) }} />
                     </Box>
                     <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField fullWidth label="Image Link" id="fullWidth" defaultValue={imageLink} value={imageLink} onChange={(e, value) => { setImageLink(e.target.value) }} />
+                        <TextField fullWidth label="Image Link" id="fullWidth" defaultValue={imageLink} value={imageLink || ""} onChange={(e, value) => { setImageLink(e.target.value) }} />
                     </Box>
                     <Box m={1} sx={{ display: 'flex', maxWidth: '100%' }}>
-                        <TextField fullWidth type='number' label="Price" id="fullWidth" defaultValue={price} value={price} onChange={(e, value) => { setPrice(e.target.value) }} />
+                        <TextField fullWidth type='number' label="Price" id="fullWidth" defaultValue={price} value={price || ""} onChange={(e, value) => { setPrice(e.target.value) }} />
                         <ToggleButtonGroup
                             color="primary"
                             defaultValue={published ? "Publish" : "Unpublish"}
