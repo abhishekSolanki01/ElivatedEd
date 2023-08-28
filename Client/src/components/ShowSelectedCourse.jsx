@@ -3,7 +3,7 @@ import React from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { purchaseCourse, viewCourse } from "../axios";
 import { courseDetails } from "../store/selectors/course";
-import EditCourse from "./editCourse";
+// import EditCourse from "./editCourse";
 import CourseCard from "./helperComponents/CourseCard";
 import {useRecoilState} from 'recoil';
 import { courseState } from "../store/atoms/courses";
@@ -78,7 +78,7 @@ function ShowSelectedCourses() {
             </Grid>
             <Grid item xs={12} md={8}>
                 {isAdmin ?
-                    <EditCourse/>
+                    {/* <EditCourse/> */}
                     :
                     <CourseDetails/>
                 }
