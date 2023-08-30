@@ -61,9 +61,9 @@ function ShowSelectedCourses() {
     return (
         <Grid sx={{ flexGrow: 1 }} container spacing={2} mb={2}>
             <Grid item xs={12}>
-                <Typography variant='h4'>Selected Course Page</Typography>
+                {/* <Typography variant='h4'>Selected Course Page</Typography> */}
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4} mt={1}>
                 <Grid container justifyContent="center" spacing={3}>
                     {/* {courses.map((c, index) => */}
                     {courseDetail && courseDetail.course && <CourseCard

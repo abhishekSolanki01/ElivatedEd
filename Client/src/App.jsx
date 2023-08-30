@@ -84,10 +84,11 @@ const ProtectedRoute = ({ children }) => {
       <RecoilRoot>
 
         <CssBaseline />
-        <Container sx={{}}>
+
           <Router>
             
             <AppBarCustom />
+            <Container sx={{}}>
             <InitUser/>
             <Routes>
               <Route path="/" element={<Landing />} />
@@ -97,8 +98,9 @@ const ProtectedRoute = ({ children }) => {
               <Route path="/courses/purchased" element={<ProtectedRoute><ShowPurchasedCourses /></ProtectedRoute>} />
               <Route path="/courses/:id" element={<ShowSelectedCourse />} />
             </Routes>
+            </Container>
+
           </Router>
-        </Container>
         {/* <Footer /> */}
 
       </RecoilRoot>

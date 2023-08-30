@@ -21,6 +21,8 @@ import { editCourse } from "../axios";
 
 
 const EditCourse = () => {
+    const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
+
     const { id: courseId } = useParams()
 
     const [courseDetail, setCourse] = useRecoilState(courseState);
@@ -30,6 +32,7 @@ const EditCourse = () => {
     const [imageLink, setImageLink] = useState(courseDetail?.course?.imageLink)
     const [price, setPrice] = useState(courseDetail?.course?.price)
     const [published, setPublish] = useState(courseDetail?.course?.published)
+    const [summary, setSummary] = useState(courseDetail?.course?.summary)
 
     useEffect(() => {
         setTitle(courseDetail.course?.title)
@@ -37,16 +40,17 @@ const EditCourse = () => {
         setImageLink(courseDetail.course?.imageLink)
         setPrice(courseDetail.course?.price)
         setPublish(courseDetail.course?.published)
+        setSummary(courseDetail.course?.summary)
     }, [courseDetail])
 
 
     const onSave = async() => {
-        debugger
         const editCourseRes = await editCourse(courseId, {title,
             description,
             price,
             imageLink,
-            published
+            published,
+            summary
         })
         setCourse({
             loading: false,
@@ -55,7 +59,8 @@ const EditCourse = () => {
                 description,
                 price,
                 imageLink,
-                published
+                published,
+                summary
             }
         })
     }
@@ -98,6 +103,9 @@ const EditCourse = () => {
                             <ToggleButton value="Publish">Publish</ToggleButton>
                             <ToggleButton value="Unpublish">Unpublish</ToggleButton>
                         </ToggleButtonGroup>
+                    </Box>
+                    <Box m={1} sx={{ maxWidth: '100%', }}>
+                        <TextField multiline rows={6} fullWidth label="Summary" id="fullWidth" defaultValue={summary} value={summary || ""} onChange={(e, value) => { setSummary(e.target.value) }} />
                     </Box>
                     <Box m={1} sx={{ height: 'auto' }} >
                         <Button size="small" variant="contained" onClick={onSave}>Save</Button>

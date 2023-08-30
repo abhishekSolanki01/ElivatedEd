@@ -38,7 +38,7 @@ function Login() {
         <Grid container sx={{ justifyContent: 'space-between' }}>
             <Grid item xs={12} md={6}>
                 <Box sx={{
-                    height: "100vh", display: 'flex',
+                    height: "90vh", display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-around'
                 }}>
@@ -58,7 +58,7 @@ function Login() {
                     />
                 </Box>
             </Grid>
-            <Grid item xs={12} md={6} sx={{ height: "100vh", display: 'flex', flexWrap: 'wrap', alignContent: 'center', justifyContent: 'center' }}>
+            <Grid item xs={12} md={6} sx={{ height: "90vh", display: 'flex', flexWrap: 'wrap', alignContent: 'center', justifyContent: 'center' }}>
                 <Box
                     sx={{
                         display: 'flex',

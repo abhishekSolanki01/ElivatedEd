@@ -88,8 +88,8 @@ function AppBarCustom() {
     return <>Loading...</>
   }else{
     return (
-      <AppBar position="sticky" sx={{background: "#121212"}}>
-        <Container maxWidth="xl">
+      <AppBar position="sticky" sx={{background: "#121212", paddingLeft:3, paddingRight: 3 }}>
+        {/* <Container maxWidth="xl"> */}
           <Toolbar disableGutters>
             <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
             <Typography
@@ -218,7 +218,7 @@ function AppBarCustom() {
             }
   
           </Toolbar>
-        </Container>
+        {/* </Container> */}
       </AppBar>
     );
   }

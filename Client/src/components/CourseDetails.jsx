@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Grid, Card, Paper, Box, TextField, ToggleButtonGroup, ToggleButton, Button } from '@mui/material';
+import { Grid, Card, Paper, Box, TextField, ToggleButtonGroup, ToggleButton, Button, Typography, ListItem, ListItemText, List } from '@mui/material';
 import { courseState } from "../store/atoms/courses";
 
 import { useRecoilState } from 'recoil'
@@ -30,6 +30,7 @@ const CourseDetails = () => {
     const [imageLink, setImageLink] = useState(courseDetail?.course?.imageLink)
     const [price, setPrice] = useState(courseDetail?.course?.price)
     const [published, setPublish] = useState(courseDetail?.course?.published)
+
 
     useEffect(() => {
         setTitle(courseDetail.course?.title)
@@ -64,6 +65,20 @@ const CourseDetails = () => {
     //     return <></>
     // }
 
+    function generate(element) {
+        console.log(courseDetail)
+        
+        return courseDetail?.course?.summary && courseDetail.course.summary.map((value) =>
+        (<ListItem>
+            <Box sx={{backgroundColor: "#41a5f5", width: 10, height: 10, mr: 2, borderRadius: 50 }}></Box>
+            <ListItemText
+                primary={value}
+                // secondary={false ? 'Secondary text' : null}
+            />
+        </ListItem>)
+        );
+      }
+
     return (
         <Grid container justifyContent="center" spacing={3} mt={1}>
             <Paper
@@ -71,37 +86,22 @@ const CourseDetails = () => {
                     height: "auto",
                     width: "100%",
                     backgroundColor: (theme) =>
-                        theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                        theme.palette.mode === 'dark' ? '#1e1e1e' : '#fff',
                 }}
             >
                 {courseDetail && <Box m={2}>
-                    <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField disabled fullWidth  label="Title" id="fullWidth" defaultValue={title|| ""} value={title || ""} onChange={(e, value) => { setTitle(e.target.value) }} />
+                    <Box>
+                    <Grid item xs={12} md={12}>
+                    <Typography sx={{ mt: 4, mb: 2, textAlign: "left" , ml:2, color: "#41a5f5"}} variant="h6" component="div">
+                        What you will learn
+                    </Typography>
+                    <Box style={{border: "1px solid #41a5f5", width: 300, marginBottom: 30, marginLeft: 15 }}/>
+
+                        <List>
+                            {generate()}
+                        </List>
+                    </Grid>
                     </Box>
-                    <Box m={1} sx={{ maxWidth: '100%'}}>
-                        <TextField disabled fullWidth label="Description" id="fullWidth" defaultValue={description || ""} value={description || ""} onChange={(e, value) => { setDescription(e.target.value) }} />
-                    </Box>
-                    <Box m={1} sx={{ maxWidth: '100%', }}>
-                        <TextField disabled fullWidth label="Image Link" id="fullWidth" defaultValue={imageLink || ""} value={imageLink || ""} onChange={(e, value) => { setImageLink(e.target.value) }} />
-                    </Box>
-                    <Box m={1} sx={{ display: 'flex', maxWidth: '100%' }}>
-                        <TextField disabled fullWidth type='number' label="Price" id="fullWidth" defaultValue={price || ""} value={price || ""} onChange={(e, value) => { setPrice(e.target.value) }} />
-                        <ToggleButtonGroup
-                        disabled
-                            color="primary"
-                            defaultValue={published ? "Publish" : "Unpublish"}
-                            value={published ? "Publish" : "Unpublish"}
-                            exclusive
-                            onChange={(e)=>{setPublish(e.target.value === "Publish")}}
-                            aria-label="Platform"
-                        >
-                            <ToggleButton value="Publish">Publish</ToggleButton>
-                            <ToggleButton value="Unpublish">Unpublish</ToggleButton>
-                        </ToggleButtonGroup>
-                    </Box>
-                    {/* <Box m={1} sx={{ height: 'auto' }} >
-                        <Button size="small" variant="contained" onClick={onSave}>Save</Button>
-                    </Box> */}
                 </Box>}
             </Paper>
         </Grid>

@@ -7,7 +7,8 @@ const courseSchema = new Schema({
     description: String, 
     price: Number, 
     imageLink: String, 
-    published: Boolean
+    published: Boolean,
+    summary: Array,
   })
 
   const Course = model('course', courseSchema)

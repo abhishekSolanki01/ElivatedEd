@@ -1,6 +1,6 @@
 import axios from "axios"
-const url = "http://localhost:3000/users"
-const admin_url = "http://localhost:3000/admin"
+const url = `/users` //"http://localhost:3000/users"
+const admin_url = `/admin` //"http://localhost:3000/admin"
 
 export const register = async(data, isAdmin = false) => {
     let URL = isAdmin ? admin_url : url;
@@ -15,7 +15,6 @@ export const register = async(data, isAdmin = false) => {
 }
 
 export const login = async (data, isAdmin=false) => {
-    debugger
     let URL = isAdmin ? admin_url : url;
     const loginRes = await axios({
         url : `${URL}/login`,

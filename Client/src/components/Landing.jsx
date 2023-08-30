@@ -20,9 +20,9 @@ function Landing() {
 
         <Container>
             <Grid container sx={{ justifyContent: 'space-between' }}>
-                <Grid item sm={4} xs={12}>
+                <Grid item sm={6} xs={12}>
                     <Box sx={{
-                        height: "100vh", display: 'flex',
+                        height: "90vh", display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-around'
                     }}>
@@ -31,7 +31,9 @@ function Landing() {
                             flexDirection: 'column',
                             // justifyContent: 'space-around'
                         }}>
-                            <Typography variant="h1">Simplify Learning, Amplify Growth</Typography>
+
+                            <Typography gutterBottom={4} sx={{display: "flex", flexWrap:"wrap"}} variant="h3">Simplify  <span style={{color: '#41a5f5'}}>Learning</span>, Amplify <span style={{color: "#41a5f5"}}>Growth</span></Typography>
+                            <Typography variant="h5" sx={{textAlign:"initial"}}>Welcome to <span style={{color:"#41a5f5"}}>LEARNit</span>, your gateway to a world of knowledge and skill enhancement! Our cutting-edge course selling web application is designed to help educators, professionals, and knowledge seekers easily create, market, and sell their courses online.</Typography>
                             {!user && <Stack spacing={2} mt={6} direction="row" alignItems="center" justifyContent="center">
                                 <Button variant="contained" onClick={() => { navigate('/login') }} >Login</Button>
                                 <Button variant="outlined" onClick={() => { navigate('/signup') }}  >Signup</Button>
@@ -41,9 +43,9 @@ function Landing() {
 
                     </Box>
                 </Grid>
-                <Grid item sm={8} xs={12}>
+                <Grid item sm={6} xs={12}>
                     <Box sx={{
-                        height: "100vh", display: 'flex',
+                        height: "90vh", display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-around'
                     }}>
@@ -52,7 +54,7 @@ function Landing() {
                             // src={gif}
                             sx={{
                                 // width: "85%",
-                                height: "800px",
+                                height: "500px",
                                 backgroundImage: `url(${img})`,
                                 backgroundPosition: 'center',
                                 backgroundSize: 'cover',
@@ -64,10 +66,12 @@ function Landing() {
                 </Grid>
             </Grid>
 
+            {user && <> <Box style={{border: "1px solid #41a5f5", width: 300, margin: "auto", marginBottom: 30 }}/>
+
             <Grid container sx={{ justifyContent: 'space-between' }}>
                 <Grid item xs={12}>
                     <Box sx={{ height: "fit-content" }} mb={3}>
-                        <Typography variant="h5">Learn at Your Own Pace," "Guided by Industry Experts," "Interactive & Rich Content.</Typography>
+                        <Typography variant="h5">Learn at Your Own Pace, Guided by Industry Experts, Interactive & Rich Content.</Typography>
                         <Stack spacing={2} mt={6} direction="row" alignItems="center" justifyContent="center">
 
                             <Courses/>
@@ -75,7 +79,7 @@ function Landing() {
                         </Stack>
                     </Box>
                 </Grid>
-            </Grid>
+            </Grid> </>}
         </Container>
     </>
 }

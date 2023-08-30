@@ -31,7 +31,7 @@ router.post('/signup', async (req, res) => {
     if(addUser){
       res.status(403).json({ message: 'User already exists' });
     }else{
-      const addNewUser = new User({username, password, purchasedCourses: []})
+      const addNewUser = new User({username, password})
       await addNewUser.save(); 
       const token = await jwt.sign({username, password}, SECRET, {expiresIn: "1h"});
       res.json({ message: 'User created successfully', token, email: username  });
