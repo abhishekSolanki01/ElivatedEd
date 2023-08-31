@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Grid, Card, Paper, Box, TextField, ToggleButtonGroup, ToggleButton, Button } from '@mui/material';
 import { courseState } from "../store/atoms/courses";
 
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 
 import { useParams } from "react-router-dom";
 
@@ -18,10 +18,14 @@ import {
 } from "../store/selectors/course"
 import { useEffect } from "react";
 import { editCourse } from "../axios";
+import CustomSnackBar from "./helperComponents/CustomSnackBar";
+import { snackBarState } from "../store/atoms/snackBar";
 
 
 const EditCourse = () => {
     const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
+
+    const setSnackBarDetails = useSetRecoilState(snackBarState)
 
     const { id: courseId } = useParams()
 
@@ -45,24 +49,50 @@ const EditCourse = () => {
 
 
     const onSave = async() => {
-        const editCourseRes = await editCourse(courseId, {title,
-            description,
-            price,
-            imageLink,
-            published,
-            summary
-        })
-        setCourse({
-            loading: false,
-            course: {
-                title,
+        try{
+            const editCourseRes = await editCourse(courseId, {title,
                 description,
                 price,
                 imageLink,
                 published,
                 summary
+            })
+            if(editCourseRes.message === "Course updated successfully" ){
+                setSnackBarDetails({
+                    type: "success",
+                    isOpen: true,
+                    message: editCourseRes.message,
+                    showSnackBar: true, 
+                    triggerOpen: new Date().getTime,
+                })
+            }else{
+                setSnackBarDetails({
+                    type: "error",
+                    isOpen: true,
+                    message: editCourseRes.message
+                }) 
             }
-        })
+            setCourse({
+                loading: false,
+                course: {
+                    title,
+                    description,
+                    price,
+                    imageLink,
+                    published,
+                    summary
+                }
+            })
+
+        }catch(e){
+            setSnackBarDetails({
+                type: "error",
+                isOpen: true,
+                message: e?.message,
+                showSnackBar: true, 
+                triggerOpen: new Date().getTime,
+            }) 
+        }
     }
 
     // if(!formData){

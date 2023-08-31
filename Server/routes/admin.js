@@ -69,8 +69,8 @@ router.post('/signup', async (req, res) => {
   router.put('/courses/:courseId', auth, async (req, res) => {
     const { courseId } = req.params;
     const { title, description, price, imageLink, published, summary } = req.body;
-    let summaryArray = [];
-    if(summary){
+    let summaryArray;
+    if(typeof summary !== "object"){
       summaryArray = summary.split(/\r?\n/)
     }
     const updateCourseById = await Course.findByIdAndUpdate(courseId, { title, description, price, imageLink, published, summary: summaryArray }, { new: true })

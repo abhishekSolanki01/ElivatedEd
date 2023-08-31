@@ -30,6 +30,7 @@ import { loginStatus } from './axios'
 import {userState} from './store/atoms/user'
 import { userEmailStatus } from './store/selectors/userEmail'
 import { useEffect } from 'react'
+import CustomSnackBar from './components/helperComponents/CustomSnackBar'
 
 const darkTheme = createTheme({
   palette: {
@@ -90,6 +91,7 @@ const ProtectedRoute = ({ children }) => {
             <AppBarCustom />
             <Container sx={{}}>
             <InitUser/>
+            <CustomSnackBar/>
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<ProtectedRouteLoginLogout><Login/></ProtectedRouteLoginLogout>} />

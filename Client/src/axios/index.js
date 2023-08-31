@@ -1,6 +1,9 @@
 import axios from "axios"
-const url = `/users` //"http://localhost:3000/users"
-const admin_url = `/admin` //"http://localhost:3000/admin"
+// const url =  "http://localhost:3000/users" //`/users`
+// const admin_url =  "http://localhost:3000/admin" //`/admin`
+
+const url = "http://ec2-16-171-142-201.eu-north-1.compute.amazonaws.com:3000/users";
+const admin_url = "http://ec2-16-171-142-201.eu-north-1.compute.amazonaws.com:3000/admin"
 
 export const register = async(data, isAdmin = false) => {
     let URL = isAdmin ? admin_url : url;

@@ -1,21 +1,27 @@
 import { Grid, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { purchaseCourse, viewCourse } from "../axios";
 import { courseDetails } from "../store/selectors/course";
-// import EditCourse from "./editCourse";
+import EditCourse from "./editCourse";
 import CourseCard from "./helperComponents/CourseCard";
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useSetRecoilState} from 'recoil';
 import { courseState } from "../store/atoms/courses";
 import { useEffect } from "react";
 import CourseDetails from './CourseDetails'
+import { snackBarState } from "../store/atoms/snackBar";
 
 function ShowSelectedCourses() {
+    debugger
     const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
     const [searchParams, setSearchParams] = useSearchParams();
     const isPurchased = JSON.parse(searchParams.get('purchased'))
     const { id: courseId } = useParams()
     const [courseDetail, setCourse] = useRecoilState(courseState);
+    const setSnackBarDetails = useSetRecoilState(snackBarState)
+    const [disableBuy, setDisableBuy] = useState(false)
+
+
 
     React.useEffect(() => {
         fetchCourseById()
@@ -40,7 +46,31 @@ function ShowSelectedCourses() {
     useEffect(()=>{console.log("courseDetail",courseDetail);}, [courseDetail])
 
     const onPurchaseCourseClick = async (id) => {
-        const purchaseCourseRes = await purchaseCourse(id)
+        try{
+            const purchaseCourseRes = await purchaseCourse(id);
+            if(purchaseCourseRes.message === "Course purchased successfully"){
+                setDisableBuy(true)
+                setSnackBarDetails({
+                    message: purchaseCourseRes.message,
+                    type: 'success',
+                    isOpen: true,
+                    triggerOpen: new Date().getTime(),
+                    showSnackBar: true
+                })
+            }
+
+        }catch(e){
+            setSnackBarDetails({
+                message: e?.response?.data?.message || "Could not purchase",
+                type: 'success',
+                isOpen: true,
+                triggerOpen: new Date().getTime(),
+                showSnackBar: true
+            })
+        }
+
+
+        
     }
 
     // Add code to fetch courses from the server
@@ -53,7 +83,8 @@ function ShowSelectedCourses() {
     const action = isPurchased || JSON.parse(localStorage.getItem('isAdmin')) ? [] : [{
         title: "Buy",
         onClick: () => { onPurchaseCourseClick(courseDetail.course._id) },
-        variant: "contained"
+        variant: "contained",
+        disable: disableBuy
     }]
 
     console.log(isPurchased);
@@ -78,7 +109,7 @@ function ShowSelectedCourses() {
             </Grid>
             <Grid item xs={12} md={8}>
                 {isAdmin ?
-                    {/* <EditCourse/> */}
+                    <EditCourse/>
                     :
                     <CourseDetails/>
                 }

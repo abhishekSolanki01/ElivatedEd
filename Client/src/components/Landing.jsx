@@ -2,7 +2,7 @@
 import { Box, Container, Grid, Stack, Typography, Button } from "@mui/material";
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import img from "../assets/Thesis-rafiki-detailed.svg"
 
 import { fetchPurchasedCourse, purchaseCourse, viewAllCourses } from "../axios";
@@ -11,10 +11,12 @@ import Paper from '@mui/material/Paper';
 import CourseCard from "./helperComponents/CourseCard";
 import { userState } from "../store/atoms/user";
 import {userEmailStatus} from '../store/selectors/userEmail'
+import { snackBarState } from "../store/atoms/snackBar";
+import { useState } from "react";
 
 function Landing() {
     const navigate = useNavigate()
-    const user = useRecoilValue(userEmailStatus)
+    const user = useRecoilValue(userEmailStatus);
 
     return <>
 
@@ -87,11 +89,34 @@ function Landing() {
 const Courses = () => {
     const [courses, setCourses] = React.useState([]);
     const user = useRecoilValue(userEmailStatus)
+    const [disableBuy, setDisableBuy] = useState(false)
     const navigate = useNavigate()
+    const setSnackBarDetails = useSetRecoilState(snackBarState)
+
 
 
     const onPurchaseCourseClick = async (id) => {
-        const purchaseCourseRes = await purchaseCourse(id)
+        try{
+            const purchaseCourseRes = await purchaseCourse(id);
+            if(purchaseCourseRes.message === "Course purchased successfully"){
+                setDisableBuy(true)
+                setSnackBarDetails({
+                    message: purchaseCourseRes.message,
+                    type: 'success',
+                    isOpen: true,
+                    triggerOpen: new Date().getTime(),
+                    showSnackBar: true
+                })
+            }
+        }catch(e){
+            setSnackBarDetails({
+                message: e?.response?.data?.message || "Could not purchase",
+                type: 'success',
+                isOpen: true,
+                triggerOpen: new Date().getTime(),
+                showSnackBar: true
+            })
+        }
     }
 
     const fetchAllCourses = async () => {
@@ -111,10 +136,11 @@ const Courses = () => {
                         title: "Buy",
                         onClick: () => { onPurchaseCourseClick(c._id) },
                         variant: "contained",
-                        disabled: c.purchased
+                        disabled: c.purchased || disableBuy
                     }]
+                    let purchased = c.purchased
                     if (!user || JSON.parse(localStorage.getItem('isAdmin'))) {
-                        actions = []
+                        actions = [];
                     }
                     return (
                         <CourseCard
@@ -123,7 +149,7 @@ const Courses = () => {
                             index={index}
                             imageLink={c.imageLink}
                             actions={actions}
-                            onCardClick={() => {navigate(`/courses/${c._id}`)}}
+                            onCardClick={() => {navigate(`/courses/${c._id}/?purchased=${purchased}`)}}
                         />
                     )
                 }

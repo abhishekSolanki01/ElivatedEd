@@ -4,10 +4,14 @@ import { fetchPurchasedCourse, purchaseCourse, viewAllCourses } from "../axios";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import CourseCard from "./helperComponents/CourseCard";
+import { useNavigate } from "react-router-dom";
 
 
 function ShowCourses() {
     const [courses, setCourses] = React.useState([]);
+    const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
+    const navigate = useNavigate ()
+
 
     // Add code to fetch courses from the server
     // and set it in the courses state variable.
@@ -45,7 +49,8 @@ function ShowCourses() {
                                 description={c.description} 
                                 index={index} 
                                 imageLink={c.imageLink} 
-                                actions={actions}
+                                actions={isAdmin? [] : actions}
+                                onCardClick={() => {navigate(`/courses/${c._id}`)}}
                             />
                         )}
                         )}

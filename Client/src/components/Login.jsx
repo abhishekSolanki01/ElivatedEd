@@ -15,6 +15,7 @@ import { userState } from "../store/atoms/user";
 
 import img from "../assets/Computer-login-rafiki.svg"
 import { useState } from "react";
+import { snackBarState } from "../store/atoms/snackBar";
 
 
 /// File is incomplete. You need to add input boxes to take input for users to login.
@@ -25,12 +26,34 @@ function Login() {
     const setUser = useSetRecoilState(userState)
     const [isAdmin, setIsAdmin] = useState(false)
 
+    const setSnackBarDetail = useSetRecoilState(snackBarState)
+
     const login = async () => {
-        const loginRes = await loginUser({ username: email, password }, isAdmin)
-        if (loginRes.message = "Logged in successfully") {
-            setUser({ loading: false, userEmail: loginRes.email })
-            navigate('/')
+        try{
+            const loginRes = await loginUser({ username: email, password }, isAdmin)
+            if (loginRes.message = "Logged in successfully") {
+                setUser({ loading: false, userEmail: loginRes.email })
+                navigate('/')
+            }else{
+                setSnackBarDetail({
+                    type: 'error',
+                    message: loginRes.message,
+                    isOpen: true,
+                    triggerOpen: new Date().getTime(),
+                    showSnackBar: true
+                })
+            }
+        }catch(e){
+            setSnackBarDetail({
+                type: 'error',
+                message: e?.response?.data?.message || "invalid inputs",
+                isOpen: true,
+                triggerOpen: new Date().getTime(),
+                showSnackBar: true,
+                // showAlert: true,
+            })
         }
+       
     }
 
     return (

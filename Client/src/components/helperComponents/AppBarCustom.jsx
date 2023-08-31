@@ -88,10 +88,10 @@ function AppBarCustom() {
     return <>Loading...</>
   }else{
     return (
-      <AppBar position="sticky" sx={{background: "#121212", paddingLeft:3, paddingRight: 3 }}>
+      <AppBar position="sticky" sx={{background: "#121212", paddingLeft:3, paRight: 3 }}>
         {/* <Container maxWidth="xl"> */}
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 , color: "#41a5f5"}} />
             <Typography
               variant="h6"
               noWrap
@@ -104,6 +104,7 @@ function AppBarCustom() {
                 fontWeight: 700,
                 letterSpacing: '.3rem',
                 color: 'inherit',
+                "&:hover":{color: "#41a5f5"},
                 textDecoration: 'none',
               }}
             >
@@ -170,7 +171,7 @@ function AppBarCustom() {
                 <Button
                   key={page.name}
                   onClick={(event) => { navigate(event.currentTarget.value) }}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 2, color: 'white', display: 'block', "&:hover, &:active, &:focus" : {color: "#41a5f5", backgroundColor: "transparent", border: "none"} }}
                   value={page.route}
                 >
                   {page.name}
@@ -183,6 +184,7 @@ function AppBarCustom() {
                 fontFamily: 'monospace',
                 color: 'inherit',
                 textDecoration: 'none',
+                "&:hover" : {color: "#41a5f5", backgroundColor: "transparent"} 
               }}>{userEmail}</Typography>}
             {
               userEmail && 

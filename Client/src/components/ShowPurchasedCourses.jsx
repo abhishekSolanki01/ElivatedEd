@@ -33,7 +33,7 @@ function ShowPurchasedCourses() {
             <Grid item xs={12}>
                 {courses && <Grid container justifyContent="center" spacing={3}>
                     {courses.map((c, index) => <CourseCard 
-                        onCardClick={() => {navigate(`/courses/${c._id}/?purchased:${true}`)}}
+                        onCardClick={() => {navigate(`/courses/${c._id}/?purchased=${true}`)}}
                         title={c.title} 
                         description={c.description} 
                         index={index} 
