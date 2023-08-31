@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { purchaseCourse, viewCourse } from "../axios";
 import { courseDetails } from "../store/selectors/course";
-import EditCourse from "./editCourse";
+import EditCourse from "./EditCourse";
 import CourseCard from "./helperComponents/CourseCard";
 import {useRecoilState, useSetRecoilState} from 'recoil';
 import { courseState } from "../store/atoms/courses";
@@ -12,7 +12,6 @@ import CourseDetails from './CourseDetails'
 import { snackBarState } from "../store/atoms/snackBar";
 
 function ShowSelectedCourses() {
-    debugger
     const isAdmin = JSON.parse(localStorage.getItem('isAdmin'));
     const [searchParams, setSearchParams] = useSearchParams();
     const isPurchased = JSON.parse(searchParams.get('purchased'))
